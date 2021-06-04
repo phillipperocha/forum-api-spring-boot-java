@@ -6,8 +6,11 @@ import com.phillrocha.forum.models.Topico;
 import com.phillrocha.forum.repository.CursoRepository;
 import com.phillrocha.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -16,17 +19,18 @@ public class TopicosController {
 
     @Autowired
     private TopicoRepository topicoRepository;
-    // Precisamos injetar o CursoRepository aqui no nosso Controller
     @Autowired
     private CursoRepository cursoRepository;
 
 
     @PostMapping
-    public void cadastrar(@RequestBody TopicoForm form) {
-        // E agora vou obter o topico através da conversão do form
+    public ResponseEntity<TopicoDto> cadastrar(@RequestBody TopicoForm form, UriComponentsBuilder uriBuilder) {
         Topico topico = form.converter(cursoRepository);
-        // Com o tópico em mãos iremos salvá-lo no banco de dados
         topicoRepository.save(topico);
+
+        URI uri = uriBuilder.path("topicos/{id}").buildAndExpand(topico.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(new TopicoDto(topico));
     }
 
     @GetMapping
