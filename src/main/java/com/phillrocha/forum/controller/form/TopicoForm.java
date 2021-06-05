@@ -3,11 +3,20 @@ package com.phillrocha.forum.controller.form;
 import com.phillrocha.forum.models.Curso;
 import com.phillrocha.forum.models.Topico;
 import com.phillrocha.forum.repository.CursoRepository;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class TopicoForm {
 
+    @NotNull @NotEmpty @Length(min=5)
     private String titulo;
+
+    @NotNull @NotEmpty @Length(min=10)
     private String mensagem;
+
+    @NotNull @NotEmpty
     private String nomeCurso;
 
     public String getTitulo() {
