@@ -25,8 +25,6 @@ public class TopicosController {
 
 
     @PostMapping
-    // E vamos avisar para o spring quando ele for injetar o Form rode as validações
-    // Para isso usamos o @Valid no nosso requestBody
     public ResponseEntity<TopicoDto> cadastrar(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
         Topico topico = form.converter(cursoRepository);
         topicoRepository.save(topico);
