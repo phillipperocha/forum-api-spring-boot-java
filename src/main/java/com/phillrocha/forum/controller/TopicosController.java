@@ -1,5 +1,6 @@
 package com.phillrocha.forum.controller;
 
+import com.phillrocha.forum.controller.dto.TopicoDetailsDto;
 import com.phillrocha.forum.controller.dto.TopicoDto;
 import com.phillrocha.forum.controller.form.TopicoForm;
 import com.phillrocha.forum.models.Topico;
@@ -48,6 +49,14 @@ public class TopicosController {
         }
 
         return TopicoDto.converter(topicos);
+    }
+
+    @GetMapping("/{id}")
+    // E agora vamos devolver TopicoDetailsDto
+    public TopicoDetailsDto detalhar(@PathVariable Long id) {
+        Topico topico = topicoRepository.getById(id);
+
+        return new TopicoDetailsDto(topico);
     }
 
 }
