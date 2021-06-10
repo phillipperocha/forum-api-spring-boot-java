@@ -2,11 +2,13 @@ package com.phillrocha.forum.controller;
 
 import com.phillrocha.forum.controller.dto.TopicoDto;
 import com.phillrocha.forum.controller.form.TopicoForm;
+import com.phillrocha.forum.controller.form.TopicoUpdateForm;
 import com.phillrocha.forum.models.Topico;
 import com.phillrocha.forum.repository.CursoRepository;
 import com.phillrocha.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -48,6 +50,15 @@ public class TopicosController {
         }
 
         return TopicoDto.converter(topicos);
+    }
+
+    @PutMapping("/{id}")
+    // Precisamos informar ao Spring para ele commitar a nossa transaction no final do método com @Transactional
+    @Transactional
+    public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody @Valid TopicoUpdateForm form) {
+        Topico topico = form.atualizar(id, topicoRepository);
+
+        return ResponseEntity.ok(new TopicoDto(topico));
     }
 
 }
