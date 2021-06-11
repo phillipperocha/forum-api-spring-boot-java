@@ -8,6 +8,9 @@ import com.phillrocha.forum.models.Topico;
 import com.phillrocha.forum.repository.CursoRepository;
 import com.phillrocha.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -39,16 +42,20 @@ public class TopicosController {
     }
 
     @GetMapping
-    public List<TopicoDto> list(String tituloTopico, String nomeCurso) {
-        List<Topico> topicos = null;
+    public Page<TopicoDto> list(@RequestParam(required = false) String tituloTopico,
+            @RequestParam(required = false) String nomeCurso, @RequestParam int pagina, @RequestParam int qtd) {
+
+        Page<Topico> topicos;
+
+        Pageable paginacao = PageRequest.of(pagina, qtd);
 
         if (nomeCurso == null && tituloTopico == null) {
-            topicos = topicoRepository.findAll();
+            topicos = topicoRepository.findAll(paginacao);
         } else if (tituloTopico != null) {
-            topicos = topicoRepository.findByTitulo(tituloTopico);
+            topicos = topicoRepository.findByTitulo(tituloTopico, paginacao);
 
         } else {
-            topicos = topicoRepository.findByCursoNome(nomeCurso);
+            topicos = topicoRepository.findByCursoNome(nomeCurso, paginacao);
         }
 
         return TopicoDto.converter(topicos);
