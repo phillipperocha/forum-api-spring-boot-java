@@ -1,5 +1,6 @@
 package com.phillrocha.forum.controller;
 
+import com.phillrocha.forum.controller.dto.TopicoDetailsDto;
 import com.phillrocha.forum.controller.dto.TopicoDto;
 import com.phillrocha.forum.controller.form.TopicoForm;
 import com.phillrocha.forum.controller.form.TopicoUpdateForm;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/topics")
@@ -52,23 +54,40 @@ public class TopicosController {
         return TopicoDto.converter(topicos);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TopicoDetailsDto> detalhar(@PathVariable Long id) {
+        Optional<Topico> optional = topicoRepository.findById(id);
+        if (optional.isPresent()) {
+            Topico topico = topicoRepository.getById(id);
+            return ResponseEntity.ok(new TopicoDetailsDto(topico));
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+
     @PutMapping("/{id}")
-    // Precisamos informar ao Spring para ele commitar a nossa transaction no final do método com @Transactional
     @Transactional
     public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, @RequestBody @Valid TopicoUpdateForm form) {
-        Topico topico = form.atualizar(id, topicoRepository);
+        Optional<Topico> optional = topicoRepository.findById(id);
+        if (optional.isPresent()) {
+            Topico topico = form.atualizar(id, topicoRepository);
+            return ResponseEntity.ok(new TopicoDto(topico));
+        }
+        return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new TopicoDto(topico));
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    // Nós não retornaremos nada no corpo da requisição, já que deletaremos o recurso
-    // O ResponseEntity tem um generics, mas como não enviaremos nada colocamos uma ? só pra ele não ficar reclamando
     public ResponseEntity<?> remover(@PathVariable Long id) {
-        topicoRepository.deleteById(id);
+        Optional<Topico> optional = topicoRepository.findById(id);
+        if (optional.isPresent()) {
+            topicoRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.notFound().build();
+
     }
 
 }
