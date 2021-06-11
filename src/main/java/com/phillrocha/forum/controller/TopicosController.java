@@ -61,4 +61,14 @@ public class TopicosController {
         return ResponseEntity.ok(new TopicoDto(topico));
     }
 
+    @DeleteMapping("/{id}")
+    @Transactional
+    // Nós não retornaremos nada no corpo da requisição, já que deletaremos o recurso
+    // O ResponseEntity tem um generics, mas como não enviaremos nada colocamos uma ? só pra ele não ficar reclamando
+    public ResponseEntity<?> remover(@PathVariable Long id) {
+        topicoRepository.deleteById(id);
+
+        return ResponseEntity.ok().build();
+    }
+
 }
