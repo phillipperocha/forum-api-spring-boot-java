@@ -8,8 +8,8 @@ import com.phillrocha.forum.models.Topico;
 import com.phillrocha.forum.repository.CursoRepository;
 import com.phillrocha.forum.repository.TopicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -20,7 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -44,6 +43,7 @@ public class TopicosController {
     }
 
     @GetMapping
+    @Cacheable(value = "TopicList")
     public Page<TopicoDto> list(@RequestParam(required = false) String tituloTopico,
                                 @RequestParam(required = false) String nomeCurso,
                                 @PageableDefault(sort="id", direction=Direction.ASC, page = 0, size = 10) Pageable paginacao) {
