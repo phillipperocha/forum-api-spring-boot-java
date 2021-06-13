@@ -1,6 +1,7 @@
 package com.phillrocha.forum.controller.dto;
 
 import com.phillrocha.forum.models.Topico;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +36,7 @@ public class TopicoDto {
         return dataCriacao;
     }
 
-    public static List<TopicoDto> converter(List<Topico> topicos) {
-        return topicos.stream().map(TopicoDto::new).collect(Collectors.toList());
+    public static Page<TopicoDto> converter(Page<Topico> topicos) {
+        return topicos.map(TopicoDto::new);
     }
 }
