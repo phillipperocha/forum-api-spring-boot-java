@@ -1,6 +1,7 @@
 package com.phillrocha.forum.controller;
 
 import com.phillrocha.forum.config.security.TokenService;
+import com.phillrocha.forum.controller.dto.TokenDto;
 import com.phillrocha.forum.controller.form.LoginForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +27,15 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<?> authenticate(@RequestBody @Valid LoginForm form) {
+    public ResponseEntity<TokenDto> authenticate(@RequestBody @Valid LoginForm form) {
         UsernamePasswordAuthenticationToken loginData = form.convert();
 
         try {
             Authentication authentication = authManager.authenticate(loginData);
 
             String token = tokenService.generateToken(authentication);
-            System.out.println(token);
-            return ResponseEntity.ok().build();
+
+            return ResponseEntity.ok(new TokenDto(token, "Bearer"));
         } catch (AuthenticationException e) {
             return ResponseEntity.badRequest().build();
         }
