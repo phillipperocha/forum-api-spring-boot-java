@@ -22,8 +22,6 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authManager;
 
-    // Criaremos depois um serviço que saberá lidar com o token, que o chamaremos de TokenService
-    // e vamos injetá-lo aqui.
     @Autowired
     private TokenService tokenService;
 
