@@ -3,6 +3,7 @@ package com.phillrocha.forum.config.security;
 import java.util.Date;
 
 import com.phillrocha.forum.models.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,19 @@ public class TokenService {
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256 ,secret)
                 .compact();
-
     }
 
+    public boolean isValid(String token) {
+        try {
+            Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Long getUserId(String token) {
+        Claims claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
+        return Long.parseLong(claims.getSubject());
+    }
 }
