@@ -9,7 +9,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSpringDataWebSupport
 @EnableCaching
-// E adicionar a nova annotation
 @EnableSwagger2
 public class ForumApplication {
 
