@@ -24,6 +24,7 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/topics")
 public class TopicosController {
 
